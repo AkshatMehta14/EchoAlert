@@ -5278,6 +5278,9 @@ fs.realpath@^1.0.0:
   resolved "https://registry.npmjs.org/fs.realpath/-/fs.realpath-1.0.0.tgz"
   integrity sha512-OO0pH2lK6a0hZnAdau5ItzHPI6pUlvI7jMVnxUQRtw4owF2wk8lOSabtGDCTP4Ggrg2MbGnWO9X8K1t4+fGMDw==
 
+fsevents@^2.3.2:
+  version "2.3.3"
+
 function-bind@^1.1.2:
   version "1.1.2"
   resolved "https://registry.npmjs.org/function-bind/-/function-bind-1.1.2.tgz"
@@ -6671,10 +6674,8 @@ lighthouse-logger@^1.0.0:
     debug "^2.6.9"
     marky "^1.2.2"
 
-lightningcss-win32-x64-msvc@1.19.0:
+lightningcss-darwin-arm64@1.19.0:
   version "1.19.0"
-  resolved "https://registry.npmjs.org/lightningcss-win32-x64-msvc/-/lightningcss-win32-x64-msvc-1.19.0.tgz"
-  integrity sha512-C+VuUTeSUOAaBZZOPT7Etn/agx/MatzJzGRkeV+zEABmPuntv1zihncsi+AyGmjkkzq3wVedEy7h0/4S84mUtg==
 
 lightningcss@~1.19.0:
   version "1.19.0"
@@ -7979,16 +7980,16 @@ react-native-helmet-async@2.0.4:
     shallowequal "^1.1.0"
 
 react-native-maps@^1.18.1:
-  version "1.18.1"
-  resolved "https://registry.npmjs.org/react-native-maps/-/react-native-maps-1.18.1.tgz"
-  integrity sha512-53ypvAMgj0okYZetlf+QjRBVBrImOiVYsb8I3DyUl/kEqDvO/PLlhZ2pu5tgL+r0EfOxjgx9kPWcoVnpniukaA==
+  version "1.18.2"
+  resolved "https://registry.npmjs.org/react-native-maps/-/react-native-maps-1.18.2.tgz"
+  integrity sha512-HWkYIfasEGmnYmfBVbAYVVScOeZbIe+tI19pI/3oQ9GkY0px7hvCimjzuh0Y6GTFn8WHYk8qK5fmkmOKTpLy5A==
   dependencies:
     "@types/geojson" "^7946.0.13"
 
 react-native-reanimated@*, react-native-reanimated@^3.15.5:
-  version "3.15.5"
-  resolved "https://registry.npmjs.org/react-native-reanimated/-/react-native-reanimated-3.15.5.tgz"
-  integrity sha512-admqeZ0w235vQqYPy+IUgmHu5gwKi9+b7AQRV1yIK3MbAMLYx+RY+tTUtx1CNE5X+rNZ6eSQssW5z77yTwIusg==
+  version "3.16.0"
+  resolved "https://registry.npmjs.org/react-native-reanimated/-/react-native-reanimated-3.16.0.tgz"
+  integrity sha512-DDyp5/sFeDTsb7lf/iYVwyRmbfzO/+vsUjGV4YHeI9RbelG9GpZRJoxyv5CN0PXsEjQiXk4XJ8rxYDopCg9bsg==
   dependencies:
     "@babel/plugin-transform-arrow-functions" "^7.0.0-0"
     "@babel/plugin-transform-class-properties" "^7.0.0-0"
