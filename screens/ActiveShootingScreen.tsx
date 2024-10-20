@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { StyleSheet, View, Text, Button } from "react-native";
-import MapView, { Marker } from "react-native-maps";
+import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import { firestore } from "@/firebase/config";
 import { collection, addDoc } from "firebase/firestore";
 import { getCurrentPositionAsync, LocationObject } from "expo-location";
@@ -38,6 +38,7 @@ const ActiveSchoolShootingPage = () => {
       <Text style={styles.description}>Location of the incident:</Text>
 
       <MapView
+        provider={PROVIDER_GOOGLE}
         style={styles.map}
         initialRegion={{
           ...location,
