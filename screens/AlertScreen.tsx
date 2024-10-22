@@ -1,28 +1,29 @@
-import React, { useEffect } from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
-import MapView, { Marker, Heatmap, PROVIDER_GOOGLE } from "react-native-maps";
-import { getDocs, collection } from "@firebase/firestore";
+import { HeatmapClusters } from "@/components/HeatmapClusters";
 import { firestore } from "@/firebase/config";
+import { collection, getDocs } from "@firebase/firestore";
+import React, { useEffect, useState } from "react";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 
-// @ts-ignore
-const AlertScreen = ({ navigation }) => {
-  const heatMapData: any[] | undefined = [];
-  const getLocation = async () => {
-    const querySnapshot = await getDocs(collection(firestore, "locations"));
-    querySnapshot.forEach((doc) => {
-      // doc.data() is never undefined for query doc snapshots
-      console.log(doc.id, " => ", doc.data());
-      // lat, long, 5 weight
-      heatMapData.push(
-        doc.data().coords.latitude,
-        doc.data().coords.longitude,
-        5
-      );
-    });
-  };
+export interface LocationData {
+  latitude: number;
+  longitude: number;
+}
+
+const AlertScreen = ({ navigation }: any) => {
+  const [dataPoints, setDataPoints] = useState<LocationData[]>([]);
 
   useEffect(() => {
-    getLocation().then((r) => console.log("get location finished"));
+    (async () => {
+      const querySnapshot = await getDocs(collection(firestore, "locations"));
+      const pointLocations: LocationData[] = [];
+
+      querySnapshot.forEach((doc) => {
+        pointLocations.push(doc.data().coords);
+      });
+
+      setDataPoints(pointLocations);
+    })();
   }, []);
 
   const location = {
@@ -57,7 +58,7 @@ const AlertScreen = ({ navigation }) => {
           title="West Windsor-Plainsboro High School North"
           description="A description of the school can go here."
         />
-        <Heatmap points={heatMapData} radius={20} opacity={0.7} />
+        <HeatmapClusters coords={dataPoints} />
       </MapView>
     </View>
   );

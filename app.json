@@ -13,7 +13,7 @@
     "ios": {
       "supportsTablet": true,
       "config": {
-        "googleMapsApiKey": "AIzaSyC8t79ALHeA3hVoSsIJSlYS4xH7hB8IHds"
+        "googleMapsApiKey": ""
       },
       "bundleIdentifier": "com.akshatmehta.EchoAlert"
     },

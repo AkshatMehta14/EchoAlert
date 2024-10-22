@@ -1,16 +1,23 @@
-import React, { useEffect, useState } from "react";
-import { StyleSheet, View, Text, Button } from "react-native";
-import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
+import { UserContext } from "@/context/userContext";
 import { firestore } from "@/firebase/config";
-import { collection, addDoc } from "firebase/firestore";
 import { getCurrentPositionAsync, LocationObject } from "expo-location";
+import {
+  addDoc,
+  collection,
+  getDocs,
+  query,
+  updateDoc,
+  where,
+} from "firebase/firestore";
+import React, { useContext, useEffect, useState } from "react";
+import { Button, StyleSheet, Text, View } from "react-native";
+import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 
-interface LocationData {
-  latitude: number;
-  longitude: number;
-}
+type UserLocationDoc = { email: string } & LocationObject;
 
 const ActiveSchoolShootingPage = () => {
+  const { user } = useContext(UserContext);
+
   const [userLocation, setUserLocation] = useState<LocationObject>();
 
   useEffect(() => {
@@ -21,8 +28,24 @@ const ActiveSchoolShootingPage = () => {
     getLocation();
   }, []);
 
-  function submitToFirebase() {
-    addDoc(collection(firestore, "locations"), userLocation);
+  async function submitToFirebase() {
+    const locations = collection(firestore, "locations");
+    const docs = await getDocs(
+      query(locations, where("email", "==", user?.email))
+    );
+
+    let updated = false;
+    docs.forEach((doc) => {
+      updated = true;
+      updateDoc(doc.ref, { ...userLocation });
+    });
+
+    if (updated) return;
+
+    addDoc(locations, {
+      email: user?.email,
+      ...userLocation,
+    } as UserLocationDoc);
   }
 
   // Coordinates for West Windsor-Plainsboro High School North
