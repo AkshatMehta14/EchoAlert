@@ -102,6 +102,8 @@ const kMeans = (coords: LocationData[], k: number) => {
       }
     });
 
+    console.log("MAP", clusterPoints.size);
+
     let allEqual = true;
     let objectiveSum = 0;
     clusterPoints.forEach((points, key) => {
@@ -116,6 +118,8 @@ const kMeans = (coords: LocationData[], k: number) => {
     if (allEqual) {
       return { objectiveSum, centroids, clusterPoints };
     }
+
+    clusterPoints.clear();
   }
 };
 
@@ -144,17 +148,24 @@ export const HeatmapClusters = ({ coords }: HeatmapProps) => {
   const [clusters, setClusters] = useState<WeightedLatLng[]>();
 
   useEffect(() => {
+    if (coords.length === 0) {
+      return;
+    }
+
     const data = clusterData(coords);
+    console.log("DATA", data);
 
     const weightedData = data.centroids.map((centroid, idx) => {
       return {
         ...centroid,
-        weight: data.clusterPoints.get(idx)?.length,
+        weight: (data.clusterPoints.get(idx)?.length ?? 0) * 5,
       };
     });
 
     setClusters(weightedData);
-  }, []);
+  }, [coords]);
 
-  return <Heatmap points={clusters} />;
+  console.log("CLS", clusters);
+
+  return <Heatmap opacity={1} points={clusters} radius={100} />;
 };

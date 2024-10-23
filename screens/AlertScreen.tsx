@@ -1,6 +1,6 @@
 import { HeatmapClusters } from "@/components/HeatmapClusters";
 import { firestore } from "@/firebase/config";
-import { collection, getDocs } from "@firebase/firestore";
+import { collection, getDocs } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
@@ -15,12 +15,19 @@ const AlertScreen = ({ navigation }: any) => {
 
   useEffect(() => {
     (async () => {
-      const querySnapshot = await getDocs(collection(firestore, "locations"));
+      const locations = collection(firestore, "locations");
+      const querySnapshot = await getDocs(locations);
       const pointLocations: LocationData[] = [];
 
       querySnapshot.forEach((doc) => {
-        pointLocations.push(doc.data().coords);
+        const { coords } = doc.data();
+        if (!coords) return;
+
+        const { latitude, longitude } = doc.data().coords;
+        pointLocations.push({ latitude, longitude });
       });
+
+      console.log("PTS", pointLocations);
 
       setDataPoints(pointLocations);
     })();
@@ -44,22 +51,6 @@ const AlertScreen = ({ navigation }: any) => {
       <Text style={styles.emergencyText}>ONLY PRESS IN EMERGENCY</Text>
 
       <Text style={styles.title}>ACTIVE SHOOTER PRESENT</Text>
-      <MapView
-        provider={PROVIDER_GOOGLE}
-        style={styles.map}
-        initialRegion={{
-          ...location,
-          latitudeDelta: 0.005, // Adjust as necessary
-          longitudeDelta: 0.005, // Adjust as necessary
-        }}
-      >
-        <Marker
-          coordinate={location}
-          title="West Windsor-Plainsboro High School North"
-          description="A description of the school can go here."
-        />
-        <HeatmapClusters coords={dataPoints} />
-      </MapView>
     </View>
   );
 };

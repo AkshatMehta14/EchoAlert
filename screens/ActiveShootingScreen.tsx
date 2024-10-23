@@ -1,6 +1,7 @@
 import { UserContext } from "@/context/userContext";
 import { firestore } from "@/firebase/config";
 import { getCurrentPositionAsync, LocationObject } from "expo-location";
+import { HeatmapClusters } from "@/components/HeatmapClusters";
 import {
   addDoc,
   collection,
@@ -13,23 +14,42 @@ import React, { useContext, useEffect, useState } from "react";
 import { Button, StyleSheet, Text, View } from "react-native";
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 
+export interface LocationData {
+  latitude: number;
+  longitude: number;
+}
+
 type UserLocationDoc = { email: string } & LocationObject;
 
 const ActiveSchoolShootingPage = () => {
   const { user } = useContext(UserContext);
 
   const [userLocation, setUserLocation] = useState<LocationObject>();
+  const [dataPoints, setDataPoints] = useState<LocationData[]>([]);
 
   useEffect(() => {
-    const getLocation = async () => {
-      setUserLocation(await getCurrentPositionAsync());
-    };
+    (async () => {
+      const locations = collection(firestore, "locations");
+      const querySnapshot = await getDocs(locations);
+      const pointLocations: LocationData[] = [];
 
-    getLocation();
+      querySnapshot.forEach((doc) => {
+        const { coords } = doc.data();
+        if (!coords) return;
+
+        const { latitude, longitude } = doc.data().coords;
+        pointLocations.push({ latitude, longitude });
+      });
+
+      console.log("PTS", pointLocations);
+
+      setDataPoints(pointLocations);
+    })();
   }, []);
 
   async function submitToFirebase() {
     const locations = collection(firestore, "locations");
+    console.log("LOC", locations);
     const docs = await getDocs(
       query(locations, where("email", "==", user?.email))
     );
@@ -65,8 +85,8 @@ const ActiveSchoolShootingPage = () => {
         style={styles.map}
         initialRegion={{
           ...location,
-          latitudeDelta: 0.005, // Adjust as necessary
-          longitudeDelta: 0.005, // Adjust as necessary
+          latitudeDelta: 0.05, // Adjust as necessary
+          longitudeDelta: 0.05, // Adjust as necessary
         }}
       >
         <Marker
@@ -74,6 +94,7 @@ const ActiveSchoolShootingPage = () => {
           title="West Windsor-Plainsboro High School North"
           description="A description of the school can go here."
         />
+        <HeatmapClusters coords={dataPoints} />
       </MapView>
 
       <Button title={"Submit Location"} onPress={submitToFirebase} />
