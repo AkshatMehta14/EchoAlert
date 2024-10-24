@@ -5,7 +5,7 @@ export default function RootLayout() {
   return (
     <UserProvider>
       <Stack>
-        <Stack.Screen name="index" />
+        <Stack.Screen name="index" options={{ title: "Echo Alert" }} />
       </Stack>
     </UserProvider>
   );

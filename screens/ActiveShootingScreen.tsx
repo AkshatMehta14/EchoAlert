@@ -11,7 +11,7 @@ import {
   where,
 } from "firebase/firestore";
 import React, { useContext, useEffect, useState } from "react";
-import { Button, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 
 export interface LocationData {
@@ -49,7 +49,6 @@ const ActiveSchoolShootingPage = () => {
 
   async function submitToFirebase() {
     const locations = collection(firestore, "locations");
-    console.log("LOC", locations);
     const docs = await getDocs(
       query(locations, where("email", "==", user?.email))
     );
@@ -76,10 +75,11 @@ const ActiveSchoolShootingPage = () => {
 
   return (
     <View style={styles.container}>
-      {/* Example header text */}
+      {/* Header */}
       <Text style={styles.header}>Active School Shooting Alert</Text>
       <Text style={styles.description}>Location of the incident:</Text>
 
+      {/* Map */}
       <MapView
         provider={PROVIDER_GOOGLE}
         style={styles.map}
@@ -97,9 +97,12 @@ const ActiveSchoolShootingPage = () => {
         <HeatmapClusters coords={dataPoints} />
       </MapView>
 
-      <Button title={"Submit Location"} onPress={submitToFirebase} />
+      {/* Submit Button */}
+      <TouchableOpacity style={styles.submitButton} onPress={submitToFirebase}>
+        <Text style={styles.submitButtonText}>Submit Location</Text>
+      </TouchableOpacity>
 
-      {/* Additional content can be added here */}
+      {/* Footer */}
       <Text style={styles.footer}>
         Please stay safe and follow local authorities' instructions.
       </Text>
@@ -110,25 +113,53 @@ const ActiveSchoolShootingPage = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 10,
+    backgroundColor: "#f9f9f9",
+    paddingHorizontal: 20,
+    paddingVertical: 10,
   },
   header: {
-    fontSize: 24,
+    fontSize: 28,
     fontWeight: "bold",
+    color: "#333",
     marginBottom: 10,
+    textAlign: "center",
   },
   description: {
-    fontSize: 16,
-    marginBottom: 10,
+    fontSize: 18,
+    color: "#666",
+    marginBottom: 15,
+    textAlign: "center",
   },
   map: {
     width: "100%",
-    height: 300, // Adjust height as needed
-    marginBottom: 10,
+    height: 300,
+    borderRadius: 10,
+    marginBottom: 20,
+    borderColor: "#ddd",
+    borderWidth: 1,
+  },
+  submitButton: {
+    backgroundColor: "#1976d2",
+    paddingVertical: 15,
+    borderRadius: 8,
+    alignItems: "center",
+    marginBottom: 20,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  submitButtonText: {
+    color: "#fff",
+    fontWeight: "bold",
+    fontSize: 18,
+    letterSpacing: 0.5,
   },
   footer: {
-    fontSize: 14,
-    marginTop: 10,
+    fontSize: 16,
+    color: "#666",
+    marginTop: 20,
     textAlign: "center",
   },
 });
